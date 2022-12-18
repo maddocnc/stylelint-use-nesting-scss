@@ -1,4 +1,4 @@
-export default function areRulesPotentialNestingAtRule(rule1, rule2, opts) {
+export default function areRulesPotentialNestingParent(rule1, rule2, opts) {
 	const except = [].concat(Object(opts).except || []);
 	const only = [].concat(Object(opts).only || []);
 

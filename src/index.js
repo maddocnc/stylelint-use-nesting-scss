@@ -1,13 +1,13 @@
 import stylelint from 'stylelint';
 import is from './lib/is';
-import areRulesPotentialNestingAtRule from './lib/are-rules-potential-nesting-at-rule';
+import areRulesPotentialNestingParent from './lib/are-rules-potential-nesting-parent';
 import areRulesPotentialNestingMediaRule from './lib/are-rules-potential-nesting-media-rule';
 import areRulesPotentialNestingRule from './lib/are-rules-potential-nesting-rule';
-import fixNestingAtRule from './lib/fix-nesting-at-rule';
+import fixNestingParent from './lib/fix-nesting-parent';
 import fixNestingMediaRule from './lib/fix-nesting-media-rule';
 import fixNestingRule from './lib/fix-nesting-rule';
 
-export const ruleName = 'csstools/use-nesting';
+export const ruleName = 'nesting/use-nesting';
 
 export default stylelint.createPlugin(ruleName, (action, opts, context) => {
 	const shouldFix = is(context, 'fix', true);
@@ -17,85 +17,88 @@ export default stylelint.createPlugin(ruleName, (action, opts, context) => {
 		const isActionValid = stylelint.utils.validateOptions(result, ruleName, {
 			actual: action,
 			possible() {
-				return is(action, ['always', 'ignore', true, false, null]);
+				return is(action, [ 'always', 'ignore', true, false, null ]);
 			}
 		});
 
-		if (isActionValid) {
-			if (is(action, ['always', true])) {
-				result.root.walk(rule => {
-					let isProcessing = true;
+		if (!isActionValid) {
+			return
+		}
+		if (!is(action, [ 'always', true ])) {
+			return
+		}
 
-					while (isProcessing) {
-						isProcessing = false;
+		result.root.walk(rule => {
+			let isProcessing = true;
 
-						const prev = rule.prev();
+			while (isProcessing) {
+				isProcessing = false;
 
-						const isRuleValid = rule && (rule.type === 'rule' || rule.type === 'atrule');
-						const isPrevValid = prev && (prev.type === 'rule' || prev.type === 'atrule');
+				const prev = rule.prev();
 
-						// if the previous node is also a rule
-						if (isRuleValid && isPrevValid) {
-							if (areRulesPotentialNestingRule(rule, prev, opts)) {
-								// fix or report the current rule if it could be nested inside the previous rule
-								if (shouldFix) {
-									fixNestingRule(rule, prev);
+				const isRuleValid = rule && (rule.type === 'rule' || rule.type === 'atrule');
+				const isPrevValid = prev && (prev.type === 'rule' || prev.type === 'atrule');
 
-									isProcessing = true;
-								} else {
-									report(rule, prev, result);
-								}
-							} else if (areRulesPotentialNestingRule(prev, rule, opts)) {
-								// fix or report the previous rule if it could be nested inside the current rule
-								if (shouldFix) {
-									fixNestingRule(prev, rule);
+				// if the previous node is also a rule
+				if (isRuleValid && isPrevValid) {
+					if (areRulesPotentialNestingRule(rule, prev, opts)) {
+						// fix or report the current rule if it could be nested inside the previous rule
+						if (shouldFix) {
+							fixNestingRule(rule, prev);
 
-									isProcessing = true;
-								} else {
-									report(prev, rule, result);
-								}
-							} else if (areRulesPotentialNestingAtRule(rule, prev, opts)) {
-								// fix or report the current rule if it could be nested inside the previous rule
-								if (shouldFix) {
-									fixNestingAtRule(rule, prev);
+							isProcessing = true;
+						} else {
+							report(rule, prev, result);
+						}
+					} else if (areRulesPotentialNestingRule(prev, rule, opts)) {
+						// fix or report the previous rule if it could be nested inside the current rule
+						if (shouldFix) {
+							fixNestingRule(prev, rule);
 
-									isProcessing = true;
-								} else {
-									report(rule, prev, result);
-								}
-							} else if (areRulesPotentialNestingAtRule(prev, rule, opts)) {
-								// fix or report the previous rule if it could be nested inside the current rule
-								if (shouldFix) {
-									fixNestingAtRule(prev, rule);
+							isProcessing = true;
+						} else {
+							report(prev, rule, result);
+						}
+					} else if (areRulesPotentialNestingParent(rule, prev, opts)) {
+						// fix or report the current rule if it could be nested inside the previous rule
+						if (shouldFix) {
+							fixNestingParent(rule, prev);
 
-									isProcessing = true;
-								} else {
-									report(prev, rule, result);
-								}
-							} else if (areRulesPotentialNestingMediaRule(rule, prev, opts)) {
-								// fix or report the current rule if it could be nested inside the previous rule
-								if (shouldFix) {
-									fixNestingMediaRule(rule, prev);
+							isProcessing = true;
+						} else {
+							report(rule, prev, result);
+						}
+					} else if (areRulesPotentialNestingParent(prev, rule, opts)) {
+						// fix or report the previous rule if it could be nested inside the current rule
+						if (shouldFix) {
+							fixNestingParent(prev, rule);
 
-									isProcessing = true;
-								} else {
-									report(rule, prev, result);
-								}
-							} else if (areRulesPotentialNestingMediaRule(prev, rule, opts)) {
-								// fix or report the current rule if it could be nested inside the previous rule
-								if (shouldFix) {
-									fixNestingMediaRule(prev, rule);
+							isProcessing = true;
+						} else {
+							report(prev, rule, result);
+						}
+					} else if (areRulesPotentialNestingMediaRule(rule, prev, opts)) {
+						// fix or report the current rule if it could be nested inside the previous rule
+						if (shouldFix) {
+							fixNestingMediaRule(rule, prev);
 
-									isProcessing = true;
-								} else {
-									report(prev, rule, result);
-								}
-							}
+							isProcessing = true;
+						} else {
+							report(rule, prev, result);
+						}
+					} else if (areRulesPotentialNestingMediaRule(prev, rule, opts)) {
+						// fix or report the current rule if it could be nested inside the previous rule
+						if (shouldFix) {
+							fixNestingMediaRule(prev, rule);
+
+							isProcessing = true;
+						} else {
+							report(prev, rule, result);
 						}
 					}
-				});
+				}
 			}
-		}
+		});
 	};
 });
 

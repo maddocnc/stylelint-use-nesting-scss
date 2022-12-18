@@ -1,10 +1,10 @@
 module.exports = {
-	'csstools/use-nesting': [
+	'nesting/use-nesting': [
 		/* Test Nesting Rules */
 		{
 			source: '.foo { color: blue; } .foo:hover, .foo:focus { color: rebeccapurple; } .foo:focus-within { color: red; }',
 			warnings: [
-				'Expected ".foo:hover, .foo:focus" inside ".foo". (csstools/use-nesting)'
+				'Expected ".foo:hover, .foo:focus" inside ".foo". (nesting/use-nesting)'
 			]
 		},
 		{
@@ -28,6 +28,11 @@ module.exports = {
 			args: ['always']
 		},
 		{
+			source: '.foo { color: blue; } .foo .bar { color: red; }',
+			expect: '.foo { color: blue; .bar { color: red; } } ',
+			args: ['always']
+		},
+		{
 			source: '.foo { color: blue; } .foo:hover, .foo:focus { color: rebeccapurple; } .foo:focus-within { color: red; }',
 			expect: '.foo { color: blue; &:hover, &:focus { color: rebeccapurple; } } .foo:focus-within { color: red; }',
 			args: ['always', { except: /^:focus-within/i }]
@@ -48,7 +53,7 @@ module.exports = {
 			args: ['always', { only: [':hover', ':focus'] }]
 		},
 
-		/* Test Nesting At-Rules */
+		/* Test Nesting Parent */
 		{
 			source: '.foo { color: blue; } body .foo { color: rebeccapurple; } html .foo { color: red; }',
 			warnings: 1
@@ -65,27 +70,27 @@ module.exports = {
 		},
 		{
 			source: '.foo { color: blue; } body .foo { color: rebeccapurple; } html .foo { color: red; }',
-			expect: '.foo { color: blue; @nest body & { color: rebeccapurple; } @nest html & { color: red; } }',
+			expect: '.foo { color: blue; body & { color: rebeccapurple; } html & { color: red; } }',
 			args: ['always']
 		},
 		{
 			source: '.foo { color: blue; } body .foo { color: rebeccapurple; } html .foo { color: red; }',
-			expect: '.foo { color: blue; @nest body & { color: rebeccapurple; } } html .foo { color: red; }',
+			expect: '.foo { color: blue; body & { color: rebeccapurple; } } html .foo { color: red; }',
 			args: ['always', { except: /^html$/i }]
 		},
 		{
 			source: '.foo { color: blue; } body .foo { color: rebeccapurple; } html .foo { color: red; }',
-			expect: '.foo { color: blue; @nest body & { color: rebeccapurple; } } html .foo { color: red; }',
+			expect: '.foo { color: blue; body & { color: rebeccapurple; } } html .foo { color: red; }',
 			args: ['always', { except: 'html' }]
 		},
 		{
 			source: '.foo { color: blue; } body .foo { color: rebeccapurple; } html .foo { color: red; }',
-			expect: '.foo { color: blue; @nest body & { color: rebeccapurple; } } html .foo { color: red; }',
+			expect: '.foo { color: blue; body & { color: rebeccapurple; } } html .foo { color: red; }',
 			args: ['always', { only: /^body$/i }]
 		},
 		{
 			source: '.foo { color: blue; } body .foo { color: rebeccapurple; } html .foo { color: red; }',
-			expect: '.foo { color: blue; @nest body & { color: rebeccapurple; } } html .foo { color: red; }',
+			expect: '.foo { color: blue; body & { color: rebeccapurple; } } html .foo { color: red; }',
 			args: ['always', { only: 'body' }]
 		},
 
@@ -93,7 +98,7 @@ module.exports = {
 		{
 			source: '.foo { color: blue; } @media (min-width: 960px) { .foo { color: rebeccapurple; } }',
 			warnings: [
-				'Expected "@media (min-width: 960px)" inside ".foo". (csstools/use-nesting)'
+				'Expected "@media (min-width: 960px)" inside ".foo". (nesting/use-nesting)'
 			]
 		},
 		{

@@ -1,4 +1,9 @@
-# Stylelint Use Nesting [<img src="https://jonneal.dev/stylelint-logo.svg" alt="stylelint" width="90" height="90" align="right">][stylelint]
+# Stylelint Use Nesting (SCSS fork) [<img src="https://jonneal.dev/stylelint-logo.svg" alt="stylelint" width="90" height="90" align="right">][stylelint]
+
+main changes in fork
+* no `@nest` at rule
+* no `&` before `.class-name`
+
 
 [![NPM Version][npm-img]][npm-url]
 [![Build Status][cli-img]][cli-url]
@@ -20,10 +25,10 @@ Add [Stylelint Use Nesting] to your [stylelint configuration].
 ```js
 {
   "plugins": [
-    "stylelint-use-nesting"
+    "stylelint-use-nesting-scss"
   ],
   "rules": {
-    "csstools/use-nesting": "always" || "ignore"
+    "/use-nesting": "always" || "ignore"
   }
 }
 ```
@@ -96,7 +101,7 @@ expression.
 ```js
 {
   "rules": {
-    "csstools/use-nesting": ["always", { "except": [':selection', /^:dir/i] }]
+    "nesting/use-nesting": ["always", { "except": [':selection', /^:dir/i] }]
   }
 }
 ```
@@ -110,7 +115,7 @@ or regular expression.
 ```js
 {
   "rules": {
-    "csstools/use-nesting": ["always", { "only": ['.js', /^:(hover|focus)/i] }]
+    "nesting/use-nesting": ["always", { "only": ['.js', /^:(hover|focus)/i] }]
   }
 }
 ```

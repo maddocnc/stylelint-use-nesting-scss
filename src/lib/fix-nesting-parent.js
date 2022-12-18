@@ -1,6 +1,6 @@
 import postcss from 'postcss';
 
-export default function fixNestingAtRule(rule1, rule2) {
+export default function fixNestingParent(rule1, rule2) {
 	rule1.remove();
 
 	rule1.selectors = rule1.selectors.map(
