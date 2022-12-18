@@ -1,12 +1,12 @@
 {
-  "name": "stylelint-use-nesting",
-  "version": "4.0.0",
-  "description": "Enforce nesting when it is possible in CSS",
+  "name": "stylelint-use-nesting-scss",
+  "version": "4.0.3",
+  "description": "Enforce nesting when it is possible in SCSS",
   "author": "Jonathan Neal <jonathantneal@hotmail.com>",
   "license": "CC0-1.0",
   "repository": "csstools/stylelint-use-nesting",
-  "homepage": "https://github.com/csstools/stylelint-use-nesting#readme",
-  "bugs": "https://github.com/csstools/stylelint-use-nesting/issues",
+  "homepage": "https://github.com/maddocnc/stylelint-use-nesting-scss#readme",
+  "bugs": "https://github.com/maddocnc/stylelint-use-nesting-scss/issues",
   "main": "index.js",
   "module": "index.mjs",
   "files": [
@@ -17,32 +17,26 @@
   ],
   "scripts": {
     "prepublishOnly": "npm test",
-    "pretest": "rollup -c .rollup.js --silent",
+    "pretest": "rollup -c .rollup.js --silent --bundleConfigAsCjs",
     "test": "npm run test:js && npm run test:tape",
     "test:js": "eslint src/*.js --cache --ignore-path .gitignore --quiet",
     "test:tape": "stylelint-tape"
   },
-  "engines": {
-    "node": ">=16.0.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.0.0",
-    "eslint-config-dev": "^2.0.0",
+    "eslint": "^8.30.0",
+    "eslint-config-dev": "^3.1.0",
     "pre-commit": "^1.2.2",
-    "rollup": "^2.9.1",
-    "rollup-plugin-babel": "^4.4.0",
+    "rollup": "^3.7.5",
     "stylelint": "^14.9.1",
     "stylelint-tape": "^3.0.0"
   },
   "peerDependencies": {
-    "stylelint": ">= 10"
+    "stylelint": "^14.9.1"
   },
   "eslintConfig": {
-    "extends": "dev",
-    "parser": "babel-eslint"
+    "extends": "dev"
   },
   "keywords": [
     "stylelint",
